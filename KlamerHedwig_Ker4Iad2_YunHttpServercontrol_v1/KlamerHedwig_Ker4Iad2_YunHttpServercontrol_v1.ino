@@ -8,7 +8,7 @@ Servo myservo;  // create servo object to control a servo
 const int buttonPin = 2; 
 int buttonState = 0;
 int serPos = 0;  
-int slider1;
+char slider1;
 
 void setup() {
   Serial.begin(9600);
@@ -30,8 +30,15 @@ void loop() {
   
   HttpClient client;
   buttonState = digitalRead(buttonPin);
-  slider1 = client.get ("http://ker4iad2.mobidapt.com/hedwig/slider/slider1");
-  Serial.println(slider1);
+  client.get ("http://ker4iad2.mobidapt.com/hedwig/slider/slider1");
+  // print de response van de server
+  while (client.available()) {
+    slider1 = client.read();
+    Serial.print(slider1);
+    Serial.println(' ');
+  }
+  Serial.flush();
+  //slider1.toInt();
   
   // stuur een GET request
 //  client.get("http://192.168.1.100:3000/hedwig/slider/slider2");
@@ -46,12 +53,7 @@ void loop() {
 //  }
 
 
-  // print de response van de server
-  while (client.available()) {
-    char c = client.read();
-    Serial.print(c);
-  }
-  Serial.flush();
+  
 
   delay(5000);
 }
